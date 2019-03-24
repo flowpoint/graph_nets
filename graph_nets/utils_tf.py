@@ -97,7 +97,7 @@ def _get_shape(tensor):
     The `list` which contains the tensor's shape.
   """
 
-  shape_list = tensor.shape.as_list()
+  shape_list = list(tensor.shape)
   if all(s is not None for s in shape_list):
     return shape_list
   shape_tensor = tf.shape(tensor)
@@ -533,7 +533,7 @@ def repeat(tensor, repeats, axis=0, name="repeat"):
     repeated_shifted_tensor = tf.gather(shifted_tensor, indices)
     repeated_tensor = _inside_to_axis(repeated_shifted_tensor, axis)
 
-    shape = tensor.shape.as_list()
+    shape = list(tensor.shape)
     shape[axis] = None
     repeated_tensor.set_shape(shape)
 
@@ -729,12 +729,12 @@ def fully_connect_graph_static(graph,
   """
   _validate_edge_fields_are_all_none(graph)
 
-  num_graphs = graph.n_node.shape.as_list()[0]
+  num_graphs = list(graph.n_node.shape)[0]
   if num_graphs is None:
     raise ValueError("Number of graphs must be known at construction time when "
                      "using `fully_connect_graph_static`. Did you mean to use "
                      "`fully_connect_graph_dynamic`?")
-  num_nodes = graph.nodes.shape.as_list()[0]
+  num_nodes = list(graph.nodes.shape)[0]
   if num_nodes is None:
     raise ValueError("Number of nodes must be known at construction time when "
                      "using `fully_connect_graph_static`. Did you mean to use "
@@ -963,11 +963,11 @@ def _check_valid_index(index, element_name):
           "Invalid tensor `{}` parameter. Valid tensor indices must have "
           "types tf.int32 or tf.int64, got {}."
           .format(element_name, index.dtype))
-    if index.shape.as_list():
+    if list(index.shape):
       raise TypeError(
           "Invalid tensor `{}` parameter. Valid tensor indices must be scalars "
           "with shape [], got{}"
-          .format(element_name, index.shape.as_list()))
+          .format(element_name, list(index.shape)))
     return True
   else:
     raise TypeError(
